@@ -1,0 +1,47 @@
+version: '2.1'
+
+services:
+  api-service:
+    build:
+      context: .
+    container_name: api-service
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    links:
+      - db-service
+    depends_on:
+      db-service:
+        condition: service_healthy
+    mem_limit: 1024m
+    mem_reservation: 768m
+    cpu_shares: 100
+    restart: on-failure
+    volumes:
+      - .:/app
+    working_dir: /app
+    user: appuser
+    environment:
+      - "FLYWAY_URL=jdbc:mysql://db-service/codster_db?useSSL=false"
+      - "FLYWAY_USER=root"
+      - "FLYWAY_BASELINE_ON_MIGRATE=true"
+      - "FLYWAY_LOCATIONS=classpath:/database/migrations,classpath:/database/seeders"
+      - "FLYWAY_OUT_OF_ORDER=true"
+      - "FLYWAY_TABLE=migrations"
+    command: ./gradlew --project-cache-dir /tmp/gradle-cache bootRun
+  db-service:
+    container_name: db-service
+    image: mysql:5.6.41
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_USER=develop
+      - MYSQL_PASSWORD=kLGa2e8vfngD4Qy5s9mRhA3UB
+      - MYSQL_DATABASE=codster_db
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    volumes:
+      - "$HOME/mysql/codster/data:/var/lib/mysql"
