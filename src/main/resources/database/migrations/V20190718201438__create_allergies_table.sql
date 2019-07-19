@@ -1,5 +1,5 @@
 CREATE TABLE `allergies` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `medicine_id` int(11) DEFAULT NULL,

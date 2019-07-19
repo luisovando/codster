@@ -1,5 +1,5 @@
 CREATE TABLE `medical_records` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `blood_type` varchar(255) DEFAULT NULL,
   `last_medical_consultation` datetime DEFAULT NULL,
   `medical_record_id` int(11) DEFAULT NULL,
